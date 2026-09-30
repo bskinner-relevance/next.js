@@ -196,5 +196,24 @@ describe('app-dir - metadata-streaming', () => {
       expect($('title').length).toBe(1)
       expect($('head title').text()).toBe('partial static page')
     })
+
+    it.each([
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0 MicrosoftPreview/2.0 +https://aka.ms/MicrosoftPreview',
+      'Mozilla/5.0 (compatible; Bluesky Cardyb/1.1; +mailto:support@bsky.app)',
+      'http.rb/5.2.0 (Mastodon/4.3.0; +https://mastodon.social/) Bot',
+      'Mozilla/5.0 (compatible; Embedly/0.2; +http://support.embed.ly/)',
+      'Iframely/1.3.1 (+https://iframely.com/docs/about)',
+    ])(
+      'should render blocking metadata for link preview bot %s',
+      async (userAgent) => {
+        const $ = await next.render$(
+          '/static/partial',
+          {},
+          { headers: { 'user-agent': userAgent } }
+        )
+        expect($('title').length).toBe(1)
+        expect($('head title').text()).toBe('partial static page')
+      }
+    )
   })
 })
